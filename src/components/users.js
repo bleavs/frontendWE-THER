@@ -47,7 +47,11 @@ class Users {
     return this.users.map( user => user.render() ).join('')
   }
 
+
+
   render() {
+
     this.usersNode.innerHTML = `<ul>${this.usersHTML()}</ul>`
   }
+
 }
