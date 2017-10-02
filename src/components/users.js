@@ -3,7 +3,7 @@ class Users {
     this.users = []
     this.initBindingsAndEventListeners()
     this.adapter = new UsersAdapter()
-    this.fetchAndLoadUsers()
+    this.fetchAndLoadUser()
   }
 
   initBindingsAndEventListeners() {

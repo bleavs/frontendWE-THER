@@ -8,21 +8,22 @@ let qwprefs = document.getElementById('qwprefs')
 
 
 
-form.addEventListener('submit', addweather)
+form.addEventListener('submit', getLocation)
 
-// function getLocation(){
-//
-//   fetch("http://localhost:3000/api/v1/users",
-// { method: "post",
-//   headers: {'Accept': 'application/json',
-//     'Content-Type': 'application/json'},
-//   mode: 'no-cors',
-//   body: JSON.stringify({username: document.getElementById('new-user-body').value})
-// })
-//   .then(res => res.json())
-//   .then(json => console.log(json))
-//
-// }
+function getLocation(){
+
+  debugger
+
+  fetch("http://localhost:3000/api/v1/login",
+{ method: "post",
+  // headers: {'Accept': 'application/json',
+  //   'Content-Type': 'application/json'},
+  body: JSON.stringify({username: document.getElementById('new-user-body').value})
+})
+  .then(res => res.json())
+  .then(json => console.log(json))
+
+}
 
 
 function addweather() {
