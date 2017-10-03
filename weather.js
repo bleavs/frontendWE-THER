@@ -1,22 +1,30 @@
 var lat;
 var long;
+var user;
+
+let formcontainer = document.getElementById('new-user-container')
+let form = document.getElementById('new-user-form')
+let cweather = document.getElementById('current_weather')
+let fweather = document.getElementById('forecast_weather')
+let qwprefs = document.getElementById('qwprefs')
 
 window.addEventListener("load", function(){
 
   navigator.geolocation.getCurrentPosition(function(position) {
 
     lat = position.coords.latitude
+    long = position.coords.longitude
 
-     long = position.coords.longitude
+     formcontainer.innerHTML =  `<form id="new-user-form">
 
-    console.log(position.coords.latitude, position.coords.longitude);
-  })
-});
+       <input type="text" name="user-body" id="new-user-body">
 
-let form = document.getElementById('new-user-form')
-let cweather = document.getElementById('current_weather')
-let fweather = document.getElementById('forecast_weather')
-let qwprefs = document.getElementById('qwprefs')
+       <input type="submit" value="Log In"></form>`
+
+          document.getElementById('new-user-form').addEventListener('submit', getLocation)
+   });
+
+ });
 
 function roundTo(n, digits) {
     if (digits === undefined) {
@@ -28,10 +36,13 @@ function roundTo(n, digits) {
     return +(test.toFixed(digits));
   }
 
-form.addEventListener('submit', getLocation)
+
+// functions called from event listener on load
 
 function getLocation(e){
   e.preventDefault()
+
+  name = document.getElementById('new-user-body').value,
 
   fetch('http://localhost:3000/api/v1/login',
 { method: 'post',
@@ -53,23 +64,20 @@ headers: {
     let state = stateCity[1].split(",")[0].split(",")[0].split(" ")[1]
 
     addweather(city, state)
-})
-// , ${state}
-
+  })
 }
 
-
 function addweather(city, state) {
-
-  // let state =
-  // let city =
-
 
 // fetch("http://api.wunderground.com/api/77aa7f0f1dfec40f/geolookup/q/autoip.json").then(res => res.json()).then(res => data(res))
 
 fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/conditions/q/${state}/${city}.json`).then(res => res.json()).then(res => current(res))
 
 fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/forecast/q/${state}/${city}.json`).then(res => res.json()).then(res => forecast(res))
+
+formcontainer.innerHTML = `<h5>Welcome ${name}</h5>`
+
+
 }
 
 // function data(res){
@@ -80,46 +88,88 @@ fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/forecast/q/${state}/${ci
 //
 // }
 
+// <div class="card-footer">
+//   <small class="text-muted">Hi(f): ${res.forecast.simpleforecast.forecastday[0].high.fahrenheit} Lo(f): ${res.forecast.simpleforecast.forecastday[0].low.fahrenheit} </small>
+// </div>
+
+// <p class="card-text">current state: ${res.current_observation.display_location.state} </p>
+// <p class="card-text">current city: ${res.current_observation.display_location.city} </p>
+
+// https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg
+// 001lighticons-02.svg
 function current(res){
   cweather.innerHTML = `
 
-  <div id="current">
+  <div class="card" id="current">
 
-  <h6>Current Weather:</h6>
-  <p>current state: ${res.current_observation.display_location.state} </p><p>current city: ${res.current_observation.display_location.city} </p>
-  <p>current temperature(f): ${res.current_observation.temp_f} </p>
-  <p>current weather desc: ${res.current_observation.weather} </p>
-    <p>current wind strength(mph): ${res.current_observation.wind_mph} </p>
+    <div class="avatar text-center"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg" class="rounded-circle">
+    </div>
+
+
+    <div class="card-body" id="currentw">
+
+      <h6 class="card-title">Current Weather:</h6>
+
+
+      <p class="card-text">current temperature(f): ${res.current_observation.temp_f} </p>
+      <p class="card-text">current weather desc: ${res.current_observation.weather} </p>
+      <p class="card-text">current wind strength(mph): ${res.current_observation.wind_mph} </p>
+
+    </div>
+
+    <div class="card-footer">
+      <small class="text-muted">current location: ${res.current_observation.display_location.state}, ${res.current_observation.display_location.city} </small>
+    </div>
+
 
   </div>`
 
+
 qwprefs.innerHTML = `
 
-<form>
+<div class="card">
 
-<h6> Are you currently cold outside, w/ a single extra layer, w/ more than 1 extra layer?  </h6>
+    <form>
 
-<input id="cl" name="layer" type="radio" value="cold_w_one_l" />
+      <h6> Do You Feel Cold Outside?  </h6>
 
-<label for="cl">I was cold w/ one extra layer </label>
+        <div class="form-check">
 
-<input id="ncl" name="layer" type="radio" value="n_cold_w_one_l" />
+          <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="layers" id="radio1" value="option1" >
+          Cold w/ one extra layer
+          </label>
+        </div>
 
-<label for="ncl">I was not cold w/ one extra layer</label>
+        <div class="form-check">
 
+          <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="layers" id="radio2" value="option2" >
+          Not cold  w/ one extra layer
+          </label>
+        </div>
 
+        <div class="form-check">
 
-<input id="cll" name="layer" type="radio" value="cold_w_m_l" />
+          <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="layers" id="radio3" value="option3" >
+          Cold w/ more than one extra layer
+          </label>
+        </div>
 
-<label for="cll">I was cold w/ more than one extra layer </label>
+        <div class="form-check">
 
-<input id="ncll" name="layer" type="radio" value="n_cold_w_m_l" />
+          <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="layers" id="radio4" value="option4" >
+          Not cold w/ more than one extra layer
+          </label>
+        </div>
 
-<label for="ncll">I was not cold w/ more than one extra layer</label>
+        <input type="submit" value="Submit">
 
-<input type="submit" value="Submit">
+    </form>
 
-</form>`
+  </div> `
 
 }
 
@@ -127,50 +177,86 @@ function forecast(res){
 
   fweather.innerHTML = `
 
-  <div id ="today">
+  <div class="card-group" id="forecast">
 
-  <h6>Today:</h6>
-  <p>Day: ${res.forecast.simpleforecast.forecastday[0].date.weekday} </p>
-  <p>Hi(f): ${res.forecast.simpleforecast.forecastday[0].high.fahrenheit} </p>
-  <p>Lo(f): ${res.forecast.simpleforecast.forecastday[0].low.fahrenheit} </p>
-  <p>Conditions: ${res.forecast.simpleforecast.forecastday[0].conditions} </p>
-  <p>Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[0].pop} </p>
+      <div class="card">
+
+        <div class="card-body" id="today">
+
+          <h6 class="card-title">Today:</h6>
+
+            <p class="card-text">Day: ${res.forecast.simpleforecast.forecastday[0].date.weekday} </p>
+
+            <p class="card-text">Conditions: ${res.forecast.simpleforecast.forecastday[0].conditions} </p>
+            <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[0].pop} </p>
+
+        </div>
+
+        <div class="card-footer">
+          <small class="text-muted">Hi(f): ${res.forecast.simpleforecast.forecastday[0].high.fahrenheit} Lo(f): ${res.forecast.simpleforecast.forecastday[0].low.fahrenheit} </small>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="card-body" id="tomorrow">
+
+        <h6 class="card-title">Tomorrow:</h6>
+
+          <p class="card-text">Day: ${res.forecast.simpleforecast.forecastday[1].date.weekday} </p>
+
+          <p class="card-text">Conditions: ${res.forecast.simpleforecast.forecastday[1].conditions} </p>
+          <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[1].pop} </p>
+
+      </div>
+
+      <div class="card-footer">
+        <small class="text-muted">Hi(f): ${res.forecast.simpleforecast.forecastday[1].high.fahrenheit} Lo(f): ${res.forecast.simpleforecast.forecastday[1].low.fahrenheit} </small>
+      </div>
 
   </div>
 
-<div id ="tomorrow">
 
-  <h6> Tomorrow:</h6>
-  <p>Day: ${res.forecast.simpleforecast.forecastday[1].date.weekday} </p>
-  <p>Hi(f): ${res.forecast.simpleforecast.forecastday[1].high.fahrenheit} </p>
-  <p>Lo(f): ${res.forecast.simpleforecast.forecastday[1].low.fahrenheit} </p>
-  <p>Conditions: ${res.forecast.simpleforecast.forecastday[1].conditions} </p>
-  <p>Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[1].pop} </p>
+  <div class="card">
 
-</div>
+    <div class="card-body" id="day_aft_tomorrow">
 
+      <h6 class="card-title">Day after Tom.:</h6>
 
-<div id ="day_aft_tomorrow">
+        <p class="card-text">Day: ${res.forecast.simpleforecast.forecastday[2].date.weekday} </p>
 
-<h6> Day after Tom.:</h6>
-  <p>Day: ${res.forecast.simpleforecast.forecastday[2].date.weekday} </p>
-  <p>Hi(f): ${res.forecast.simpleforecast.forecastday[2].high.fahrenheit} </p>
-  <p>Lo(f): ${res.forecast.simpleforecast.forecastday[2].low.fahrenheit} </p>
-  <p>Conditions: ${res.forecast.simpleforecast.forecastday[2].conditions} </p>
-  <p>Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[2].pop} </p>
+        <p class="card-text">Conditions: ${res.forecast.simpleforecast.forecastday[2].conditions} </p>
+        <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[2].pop} </p>
 
-</div>
+    </div>
+
+    <div class="card-footer">
+      <small class="text-muted">Hi(f): ${res.forecast.simpleforecast.forecastday[2].high.fahrenheit} Lo(f): ${res.forecast.simpleforecast.forecastday[2].low.fahrenheit} </small>
+    </div>
+
+  </div>
 
 
-<div id ="three_days_now">
+    <div class="card">
 
-  <h6> 3 days from now:</h6>
-  <p>Day: ${res.forecast.simpleforecast.forecastday[3].date.weekday} </p>
-  <p>Hi(f): ${res.forecast.simpleforecast.forecastday[3].high.fahrenheit} </p>
-  <p>Lo(f): ${res.forecast.simpleforecast.forecastday[3].low.fahrenheit} </p>
-  <p>Conditions: ${res.forecast.simpleforecast.forecastday[3].conditions} </p>
-  <p>Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[3].pop} </p>
+      <div class="card-body" id="three_days_now">
 
-</div>`
+        <h6 class="card-title">3 days from now:</h6>
 
+          <p class="card-text">Day: ${res.forecast.simpleforecast.forecastday[3].date.weekday} </p>
+
+          <p class="card-text">Conditions: ${res.forecast.simpleforecast.forecastday[3].conditions} </p>
+          <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[3].pop} </p>
+
+      </div>
+
+      <div class="card-footer">
+        <small class="text-muted">Hi(f): ${res.forecast.simpleforecast.forecastday[3].high.fahrenheit} Lo(f): ${res.forecast.simpleforecast.forecastday[3].low.fahrenheit} </small>
+      </div>
+
+    </div>
+
+  </div>`
 }
