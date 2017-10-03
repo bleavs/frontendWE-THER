@@ -1,37 +1,75 @@
+var lat;
+var long;
+
+window.addEventListener("load", function(){
+
+  navigator.geolocation.getCurrentPosition(function(position) {
+
+    lat = position.coords.latitude
+
+     long = position.coords.longitude
+
+    console.log(position.coords.latitude, position.coords.longitude);
+  })
+});
+
 let form = document.getElementById('new-user-form')
-
 let cweather = document.getElementById('current_weather')
-
 let fweather = document.getElementById('forecast_weather')
-
 let qwprefs = document.getElementById('qwprefs')
 
-
+function roundTo(n, digits) {
+    if (digits === undefined) {
+      digits = 0;
+    }
+    var multiplicator = Math.pow(10, digits);
+    n = parseFloat((n * multiplicator).toFixed(11));
+    var test =(Math.round(n) / multiplicator);
+    return +(test.toFixed(digits));
+  }
 
 form.addEventListener('submit', getLocation)
 
-function getLocation(){
+function getLocation(e){
+  e.preventDefault()
 
-  debugger
-
-  fetch("http://localhost:3000/api/v1/login",
-{ method: "post",
-  // headers: {'Accept': 'application/json',
-  //   'Content-Type': 'application/json'},
-  body: JSON.stringify({username: document.getElementById('new-user-body').value})
+  fetch('http://localhost:3000/api/v1/login',
+{ method: 'post',
+headers: {
+  'Accept': 'application/json',
+  'Content-Type':'application/json'
+},
+  body: JSON.stringify(
+     {username: document.getElementById('new-user-body').value,
+    latitude: roundTo(lat, 3),
+    longitude: roundTo(long, 3)})
 })
   .then(res => res.json())
-  .then(json => console.log(json))
+  .then(json => {
+
+    let stateCity = json.location.address.split(',').slice(1,3)
+
+    let city = stateCity[0].replace(/ /g,"_")
+    let state = stateCity[1].split(",")[0].split(",")[0].split(" ")[1]
+
+    addweather(city, state)
+})
+// , ${state}
 
 }
 
 
-function addweather() {
+function addweather(city, state) {
+
+  // let state =
+  // let city =
+
+
 // fetch("http://api.wunderground.com/api/77aa7f0f1dfec40f/geolookup/q/autoip.json").then(res => res.json()).then(res => data(res))
 
-fetch("http://api.wunderground.com/api/77aa7f0f1dfec40f/conditions/q/NY/New_York.json").then(res => res.json()).then(res => current(res))
+fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/conditions/q/${state}/${city}.json`).then(res => res.json()).then(res => current(res))
 
-fetch("http://api.wunderground.com/api/77aa7f0f1dfec40f/forecast/q/NY/New_York.json").then(res => res.json()).then(res => forecast(res))
+fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/forecast/q/${state}/${city}.json`).then(res => res.json()).then(res => forecast(res))
 }
 
 // function data(res){
