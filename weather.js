@@ -97,12 +97,23 @@ formcontainer.innerHTML = `<h5>Welcome ${name}</h5>`
 
 // https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg
 // 001lighticons-02.svg
+
+// <img style="-webkit-user-select: none;background-position: 0px 0px, 10px 10px;background-size: 20px 20px;background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);cursor: zoom-in;" src="https://mdbootstrap.com/img/Photos/Avatars/img%20(10).jpg" width="150" height="150">
+//
+// style="-webkit-user-select: none;background-position: 0px 0px, 10px 10px;background-size: 20px 20px;background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);cursor: zoom-in;"
+// width="150" height="150"
+
+
 function current(res){
   cweather.innerHTML = `
 
   <div class="card" id="current">
 
-    <div class="avatar text-center"><img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg" class="rounded-circle">
+    <div class="avatar text-center">
+    <img style="-webkit-user-select: none;background-position: 0px 0px, 10px 10px;background-size: 20px 20px;background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);cursor: zoom-in;"
+    src="https://static1.squarespace.com/static/57523357c2ea515ccf6c1adb/58dcea75bebafb06e997da9c/58dcece61e5b6cf38585d46b/1490873606398/mostly+cloudy.jpg" 
+    width="150" height="150" class="rounded-circle">
+
     </div>
 
 
