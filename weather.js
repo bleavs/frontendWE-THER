@@ -10,6 +10,7 @@ var currentTemp;
 var descrip;
 var wind;
 var pref;
+var id;
 
 let formcontainer = document.getElementById('new-user-container')
 let form = document.getElementById('new-user-form')
@@ -65,6 +66,10 @@ headers: {
 })
   .then(res => res.json())
   .then(json => {
+  console.log(json)
+  console.log(json.days)
+  console.log(json.days[0].pref) //where we can create front end pref --- 
+  id = json.user.id
 
     let stateCity = json.location.address.split(',').slice(1,3)
 
@@ -158,7 +163,7 @@ qwprefs.innerHTML = `
 
           <label class="form-check-label">
           <input class="form-check-input" type="radio" name="layers" id="radio1" value="option1" >
-          Cold w/ one extra layer
+          Not cold w/ just a shirt
           </label>
         </div>
 
@@ -166,7 +171,7 @@ qwprefs.innerHTML = `
 
           <label class="form-check-label">
           <input class="form-check-input" type="radio" name="layers" id="radio2" value="option2" >
-          Not cold  w/ one extra layer
+          Cold  w/ just a shirt
           </label>
         </div>
 
@@ -174,7 +179,7 @@ qwprefs.innerHTML = `
 
           <label class="form-check-label">
           <input class="form-check-input" type="radio" name="layers" id="radio3" value="option3" >
-          Cold w/ more than one extra layer
+          Not cold  w/ a sweater
           </label>
         </div>
 
@@ -182,7 +187,23 @@ qwprefs.innerHTML = `
 
           <label class="form-check-label">
           <input class="form-check-input" type="radio" name="layers" id="radio4" value="option4" >
-          Not cold w/ more than one extra layer
+          Cold w/ a sweater
+          </label>
+        </div>
+
+        <div class="form-check">
+
+          <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="layers" id="radio5" value="option5" >
+          Not cold w/ more than a sweater
+          </label>
+        </div>
+
+        <div class="form-check">
+
+          <label class="form-check-label">
+          <input class="form-check-input" type="radio" name="layers" id="radio6" value="option6" >
+          Cold w/ more than a sweater
           </label>
         </div>
 
@@ -235,9 +256,7 @@ function forecast(res){
       <div class="card-body" id="tomorrow">
 
         <h6 class="card-title">Tomorrow:</h6>
-
           <p class="card-text">Day: ${res.forecast.simpleforecast.forecastday[1].date.weekday} </p>
-
           <p class="card-text">Conditions: ${res.forecast.simpleforecast.forecastday[1].conditions} </p>
           <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[1].pop} </p>
 
@@ -255,9 +274,7 @@ function forecast(res){
     <div class="card-body" id="day_aft_tomorrow">
 
       <h6 class="card-title">Day after Tom.:</h6>
-
         <p class="card-text">Day: ${res.forecast.simpleforecast.forecastday[2].date.weekday} </p>
-
         <p class="card-text">Conditions: ${res.forecast.simpleforecast.forecastday[2].conditions} </p>
         <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[2].pop} </p>
 
@@ -275,9 +292,7 @@ function forecast(res){
       <div class="card-body" id="three_days_now">
 
         <h6 class="card-title">3 days from now:</h6>
-
           <p class="card-text">Day: ${res.forecast.simpleforecast.forecastday[3].date.weekday} </p>
-
           <p class="card-text">Conditions: ${res.forecast.simpleforecast.forecastday[3].conditions} </p>
           <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[3].pop} </p>
 
@@ -301,10 +316,10 @@ function prefListener(){
 
 function addPrefs(e){
   e.preventDefault()
-
+  // fetch(`http://localhost:3000/api/v1/users/${id}/days`
   pref = document.querySelector('input[name="layers"]:checked').value
 
-  fetch('http://localhost:3000/api/v1/days',
+  fetch("http://localhost:3000/api/v1/days",
 { method: 'post',
 headers: {
   'Accept': 'application/json',
@@ -328,8 +343,23 @@ headers: {
 
 
     addSugg()
+
+
   })
 }
+
+  // function getSuggs(){
+  //
+  //   fetch(`http://localhost:3000/api/v1/users/${id}/days`).then(res => res.json()).then(json => {
+  //      console.log(json)
+  // // { method: 'get',
+  // // headers: {
+  // //   'Accept': 'application/json',
+  // //   'Content-Type':'application/json'
+  // // },
+  //
+  // }
+  // }
 
 function addSugg(){
   // qwprefs.innerHTML = `<h5>Welcome ${name}</h5>`
@@ -340,6 +370,7 @@ function addSugg(){
       <h6 class="card-title">Based on your Preferences:</h6>
 
         <p class="card-text">We suggest you wear a ${pref} </p>
+        <p class = "card-text"> This will be the resultant user fn- calling getSuggs for user </p>
 
     </div>
 
@@ -347,21 +378,5 @@ function addSugg(){
 
 }
 
-// formcontainer.innerHTML = `<h5>Welcome ${name}</h5>`
-//
-// fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/conditions/q/${state}/${city}.json`).then(res => res.json()).then(res => current(res)).then( () => {
-//   fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/forecast/q/${state}/${city}.json`).then(res => res.json()).then(res => forecast(res))}).then(() => prefListener())
-// }
 
   // @day = Day.create(user_id: params[:user], location_id: params[:location_id], date: params[:date], high: params[:high], low: params[:low], precipitation: params[:precipitation], wind: params[:wind])
-
-//   .then(json => {
-//
-//     let stateCity = json.location.address.split(',').slice(1,3)
-//
-//     let city = stateCity[0].replace(/ /g,"_")
-//     let state = stateCity[1].split(",")[0].split(",")[0].split(" ")[1]
-//
-//     addweather(city, state)
-//   })
-// }
