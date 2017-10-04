@@ -323,30 +323,38 @@ headers: {
        pref: pref
     })
   })
-.then(res => res.json()).then(json => console.log(json))
+.then(res => res.json()).then(json => {
+   console.log(json)
+
+
+    addSugg()
+  })
+}
+
+function addSugg(){
+  // qwprefs.innerHTML = `<h5>Welcome ${name}</h5>`
+  qwprefs.innerHTML = `
+  <div class="card">
+    <div class="card-body" id="suggestion">
+
+      <h6 class="card-title">Based on your Preferences:</h6>
+
+        <p class="card-text">We suggest you wear a ${pref} </p>
+
+    </div>
+
+  </div>`
 
 }
 
+// formcontainer.innerHTML = `<h5>Welcome ${name}</h5>`
+//
+// fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/conditions/q/${state}/${city}.json`).then(res => res.json()).then(res => current(res)).then( () => {
+//   fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/forecast/q/${state}/${city}.json`).then(res => res.json()).then(res => forecast(res))}).then(() => prefListener())
+// }
+
   // @day = Day.create(user_id: params[:user], location_id: params[:location_id], date: params[:date], high: params[:high], low: params[:low], precipitation: params[:precipitation], wind: params[:wind])
 
-
-// function getLocation(e){
-//   e.preventDefault()
-//
-//   name = document.getElementById('new-user-body').value,
-//
-//   fetch('http://localhost:3000/api/v1/login',
-// { method: 'post',
-// headers: {
-//   'Accept': 'application/json',
-//   'Content-Type':'application/json'
-// },
-//   body: JSON.stringify(
-//      {username: document.getElementById('new-user-body').value,
-//     latitude: roundTo(lat, 3),
-//     longitude: roundTo(long, 3)})
-// })
-//   .then(res => res.json())
 //   .then(json => {
 //
 //     let stateCity = json.location.address.split(',').slice(1,3)
