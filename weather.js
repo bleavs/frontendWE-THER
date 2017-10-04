@@ -1,6 +1,15 @@
 var lat;
 var long;
 var user;
+var name;
+var date;
+var high;
+var low;
+var pop;
+var currentTemp;
+var descrip;
+var wind;
+var pref;
 
 let formcontainer = document.getElementById('new-user-container')
 let form = document.getElementById('new-user-form')
@@ -36,7 +45,6 @@ function roundTo(n, digits) {
     return +(test.toFixed(digits));
   }
 
-
 // functions called from event listener on load
 
 function getLocation(e){
@@ -70,15 +78,12 @@ headers: {
 function addweather(city, state) {
 
 // fetch("http://api.wunderground.com/api/77aa7f0f1dfec40f/geolookup/q/autoip.json").then(res => res.json()).then(res => data(res))
-
-fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/conditions/q/${state}/${city}.json`).then(res => res.json()).then(res => current(res))
-
-fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/forecast/q/${state}/${city}.json`).then(res => res.json()).then(res => forecast(res))
-
 formcontainer.innerHTML = `<h5>Welcome ${name}</h5>`
 
-
+fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/conditions/q/${state}/${city}.json`).then(res => res.json()).then(res => current(res)).then( () => {
+  fetch(`http://api.wunderground.com/api/77aa7f0f1dfec40f/forecast/q/${state}/${city}.json`).then(res => res.json()).then(res => forecast(res))}).then(() => prefListener())
 }
+
 
 // function data(res){
 //
@@ -105,13 +110,18 @@ formcontainer.innerHTML = `<h5>Welcome ${name}</h5>`
 
 
 function current(res){
+
+  currentTemp = `${res.current_observation.temp_f}`
+  descrip = `${res.current_observation.weather}`
+  wind = `${res.current_observation.wind_mph}`
+
   cweather.innerHTML = `
 
   <div class="card" id="current">
 
     <div class="avatar text-center">
     <img style="-webkit-user-select: none;background-position: 0px 0px, 10px 10px;background-size: 20px 20px;background-image:linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%),linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);cursor: zoom-in;"
-    src="https://static1.squarespace.com/static/57523357c2ea515ccf6c1adb/58dcea75bebafb06e997da9c/58dcece61e5b6cf38585d46b/1490873606398/mostly+cloudy.jpg" 
+    src="https://static1.squarespace.com/static/57523357c2ea515ccf6c1adb/58dcea75bebafb06e997da9c/58dcece61e5b6cf38585d46b/1490873606398/mostly+cloudy.jpg"
     width="150" height="150" class="rounded-circle">
 
     </div>
@@ -122,14 +132,14 @@ function current(res){
       <h6 class="card-title">Current Weather:</h6>
 
 
-      <p class="card-text">current temperature(f): ${res.current_observation.temp_f} </p>
-      <p class="card-text">current weather desc: ${res.current_observation.weather} </p>
-      <p class="card-text">current wind strength(mph): ${res.current_observation.wind_mph} </p>
+      <p class="card-text">Temperature(f): ${res.current_observation.temp_f} </p>
+      <p class="card-text">Weather desc: ${res.current_observation.weather} </p>
+      <p class="card-text">Wind strength(mph): ${res.current_observation.wind_mph} </p>
 
     </div>
 
     <div class="card-footer">
-      <small class="text-muted">current location: ${res.current_observation.display_location.state}, ${res.current_observation.display_location.city} </small>
+      <small class="text-muted">Location: ${res.current_observation.display_location.state}, ${res.current_observation.display_location.city} </small>
     </div>
 
 
@@ -140,7 +150,7 @@ qwprefs.innerHTML = `
 
 <div class="card">
 
-    <form>
+    <form id="preferences-form">
 
       <h6> Do You Feel Cold Outside?  </h6>
 
@@ -182,9 +192,19 @@ qwprefs.innerHTML = `
 
   </div> `
 
+
+  // location = res.current_observation.display_location.state, res.current_observation.display_location.city
+
+
+
 }
 
 function forecast(res){
+
+  date = `${res.forecast.simpleforecast.forecastday[0].date.month}/${res.forecast.simpleforecast.forecastday[0].date.day}/${res.forecast.simpleforecast.forecastday[0].date.year}`
+  high = `${res.forecast.simpleforecast.forecastday[0].high.fahrenheit}`
+  low = `${res.forecast.simpleforecast.forecastday[0].low.fahrenheit}`
+  pop = `${res.forecast.simpleforecast.forecastday[0].pop}`
 
   fweather.innerHTML = `
 
@@ -262,7 +282,6 @@ function forecast(res){
           <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[3].pop} </p>
 
       </div>
-
       <div class="card-footer">
         <small class="text-muted">Hi(f): ${res.forecast.simpleforecast.forecastday[3].high.fahrenheit} Lo(f): ${res.forecast.simpleforecast.forecastday[3].low.fahrenheit} </small>
       </div>
@@ -270,4 +289,71 @@ function forecast(res){
     </div>
 
   </div>`
+
+  // conditions = res.forecast.simpleforecast.forecastday[0].conditions
+
 }
+
+function prefListener(){
+
+  document.getElementById('preferences-form').addEventListener('submit', addPrefs)
+}
+
+function addPrefs(e){
+  e.preventDefault()
+
+  pref = document.querySelector('input[name="layers"]:checked').value
+
+  fetch('http://localhost:3000/api/v1/days',
+{ method: 'post',
+headers: {
+  'Accept': 'application/json',
+  'Content-Type':'application/json'
+},
+  body: JSON.stringify(
+     {username: name,
+       longitude: roundTo(long, 3),
+       date: date,
+       high: high,
+       low: low,
+       precipitation: descrip,
+       wind: wind,
+       current: currentTemp,
+       pop: pop,
+       pref: pref
+    })
+  })
+.then(res => res.json()).then(json => console.log(json))
+
+}
+
+  // @day = Day.create(user_id: params[:user], location_id: params[:location_id], date: params[:date], high: params[:high], low: params[:low], precipitation: params[:precipitation], wind: params[:wind])
+
+
+// function getLocation(e){
+//   e.preventDefault()
+//
+//   name = document.getElementById('new-user-body').value,
+//
+//   fetch('http://localhost:3000/api/v1/login',
+// { method: 'post',
+// headers: {
+//   'Accept': 'application/json',
+//   'Content-Type':'application/json'
+// },
+//   body: JSON.stringify(
+//      {username: document.getElementById('new-user-body').value,
+//     latitude: roundTo(lat, 3),
+//     longitude: roundTo(long, 3)})
+// })
+//   .then(res => res.json())
+//   .then(json => {
+//
+//     let stateCity = json.location.address.split(',').slice(1,3)
+//
+//     let city = stateCity[0].replace(/ /g,"_")
+//     let state = stateCity[1].split(",")[0].split(",")[0].split(" ")[1]
+//
+//     addweather(city, state)
+//   })
+// }
