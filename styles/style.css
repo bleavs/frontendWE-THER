@@ -26,3 +26,26 @@ ul {
 .delete-user-link {
   color:red;
 }
+
+
+.loading-overlay {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#new-user-form{
+  position: fixed;
+  top: 40%;
+  left:40%;
+}
+
+#new-user-body{
+  border-radius: 10px;
+  box-shadow: 1px 5px 1px grey;
+}
+
+#form-input{
+  border-radius: 10px;
+}
