@@ -181,6 +181,7 @@ function current(res){
   // if statement for preferences - later  make into function that will later be called
 
   // call fn if user has entered days -- otherwise prompt them
+  // <p class = "card-text"> This will be the resultant user fn- calling getSuggs for user </p>
 
   if (days.length > 0) {
     qwprefs.innerHTML = `
@@ -191,7 +192,7 @@ function current(res){
         <h6 class="card-title">Based on your Preferences:</h6>
 
           <p class="card-text">We suggest you wear a ${wear()} </p>
-          <p class = "card-text"> This will be the resultant user fn- calling getSuggs for user </p>
+
 
       </div>
 
@@ -249,7 +250,7 @@ function current(res){
 
               <label class="form-check-label">
               <input class="form-check-input" type="radio" name="layers" id="radio1" value="option1" >
-              Not cold w/ just a shirt
+              Not cold w/ just a t-shirt
               </label>
             </div>
 
@@ -350,8 +351,8 @@ function forecast(res){
 
       <div class="card-body" id="tomorrow">
 
-        <h6 class="card-title">Tomorrow:</h6>
-          <p class="card-text">Day: ${res.forecast.simpleforecast.forecastday[1].date.weekday} </p>
+        <h6 class="card-title">Tomorrow: ${res.forecast.simpleforecast.forecastday[1].date.weekday}</h6>
+
           <p class="card-text">Conditions: ${res.forecast.simpleforecast.forecastday[1].conditions} </p>
           <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[1].pop} </p>
 
@@ -371,8 +372,8 @@ function forecast(res){
 
     <div class="card-body" id="day_aft_tomorrow">
 
-      <h6 class="card-title">Day after Tom.:</h6>
-        <p class="card-text">Day: ${res.forecast.simpleforecast.forecastday[2].date.weekday} </p>
+      <h6 class="card-title">Day after Tom: ${res.forecast.simpleforecast.forecastday[2].date.weekday}</h6>
+
         <p class="card-text">Conditions: ${res.forecast.simpleforecast.forecastday[2].conditions} </p>
         <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[2].pop} </p>
 
@@ -392,8 +393,8 @@ function forecast(res){
 
       <div class="card-body" id="three_days_now">
 
-        <h6 class="card-title">3 days from now:</h6>
-          <p class="card-text">Day: ${res.forecast.simpleforecast.forecastday[3].date.weekday} </p>
+        <h6 class="card-title">${res.forecast.simpleforecast.forecastday[3].date.weekday}:</h6>
+
           <p class="card-text">Conditions: ${res.forecast.simpleforecast.forecastday[3].conditions} </p>
           <p class="card-text">Chance of Rain(%): ${res.forecast.simpleforecast.forecastday[3].pop} </p>
 
@@ -480,7 +481,7 @@ function judgeSugg(){
       <h6 class="card-title">Based on your Preferences:</h6>
 
         <p class="card-text">We suggest you ${wear()} </p>
-        <p class = "card-text"> This will be the resultant user fn- calling getSuggs for user </p>
+
 
     </div>
 
@@ -491,7 +492,7 @@ else{
   qwprefs.innerHTML = ` `
 }
 
-
+// <p class = "card-text"> This will be the resultant user fn- calling getSuggs for user </p>
   // take this and place up top in if statement and have this form check if suggestion is correct
 
 }
@@ -1134,7 +1135,7 @@ function thunderWeather(){
 </svg>`
 }
 function clearWeather(){
-return `<svg style="-webkit-user-select: none;background-position: 0px 0px, 10px 10px;background-size: 20px 20px;background-color: light-blue;cursor: zoom-in;"
+return `<svg style="-webkit-user-select: none;background-position: 0px 0px, 10px 10px;background-size: 20px 20px;background-color: DodgerBlue;cursor: zoom-in;"
   width="150" height="150" class="rounded-circle"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
