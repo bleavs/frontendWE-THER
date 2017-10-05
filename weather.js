@@ -18,6 +18,8 @@ let cweather = document.getElementById('current_weather')
 let fweather = document.getElementById('forecast_weather')
 let qwprefs = document.getElementById('qwprefs')
 
+
+
 window.addEventListener("load", function(){
 
   navigator.geolocation.getCurrentPosition(function(position) {
@@ -68,7 +70,7 @@ headers: {
   .then(json => {
   console.log(json)
   console.log(json.days)
-  console.log(json.days[0].pref) //where we can create front end pref --- 
+  console.log(json.days[0].pref) //where we can create front end pref ---
   id = json.user.id
 
     let stateCity = json.location.address.split(',').slice(1,3)
