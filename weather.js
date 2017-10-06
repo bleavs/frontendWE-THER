@@ -67,7 +67,7 @@ function getLocation(e){
 
   name = document.getElementById('new-user-body').value,
 
-  fetch('http://localhost:3000/api/v1/login',
+  fetch('https://sheltered-depths-53890.herokuapp.com/',
 { method: 'post',
 headers: {
   'Accept': 'application/json',
