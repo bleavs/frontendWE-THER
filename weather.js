@@ -421,7 +421,7 @@ function addPrefs(e){
   // fetch(`http://localhost:3000/api/v1/users/${id}/days`
   pref = document.querySelector('input[name="layers"]:checked').value
 
-  fetch("http://localhost:3000/api/v1/days",
+  fetch("https://sheltered-depths-53890.herokuapp.com/api/v1/days",
 { method: 'post',
 headers: {
   'Accept': 'application/json',
@@ -452,7 +452,8 @@ headers: {
 
   // function getSuggs(){
   //
-  //   fetch(`http://localhost:3000/api/v1/users/${id}/days`).then(res => res.json()).then(json => {
+  //   fetch(`
+//localhost:3000/api/v1/users/${id}/days`).then(res => res.json()).then(json => {
   //      console.log(json)
   // // { method: 'get',
   // // headers: {
